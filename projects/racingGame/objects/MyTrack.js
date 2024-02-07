@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { MyTriangleStrip } from "./MyTriangleStrip.js";
+import { MyTriangleStrip } from "../../../src/engine/MyTriangleStrip.js";
 class MyTrack extends THREE.Object3D {
     constructor(controlPoints, width, material, samplingRate) {
         super();

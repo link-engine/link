@@ -427,6 +427,24 @@ class MyContents {
         this.eventQueue.push(event);
     }
 
+    registerListener(event, listener) {
+
+        if (!this.eventMap.has(event)) {
+            this.eventMap.set(event, []);
+        }
+        this.eventMap.get(event).push(listener);
+    }
+
+    removeListener(event, listener) {
+        if (this.eventMap.has(event)) {
+            const listeners = this.eventMap.get(event);
+            const index = listeners.indexOf(listener);
+            if (index > -1) {
+                listeners.splice(index, 1);
+            }
+        }
+    }
+    
     getParams() {
         if (this.params === null || this.params === undefined) {
             this.params = {
@@ -444,18 +462,22 @@ class MyContents {
                 scene: this.app.scene,
                 textRenderer: this.fonts.get("default"),
                 ENGINE: {
-                    pushEvent: this.pushEvent.bind(this),
-                    removeObject: this.removeObject.bind(this),
-                    addCamera: this.addCamera.bind(this),
-                    changeScene: this.changeScene.bind(this),
-                    changeHUD: this.changeHUD.bind(this),
-                    changeCamera: this.changeCamera.bind(this),
-                    getObject: this.getObject.bind(this),
-                    getEnv: (id) => { return this.envs.get(id) },
-                    getClickIntersects: () => { return this.clickIntersects },
-                    getMaterial: (id) => { return this.materials.get(id) },
-                    getNode: (id) => { return this.nodes.get(id) },
-                    setObject: (id, object) => { this.objects.set(id, object) },
+                    pushEvent:    this.pushEvent.bind(this),
+                    registerListener: this.registerListener.bind(this),
+                    removeListener:   this.removeListener.bind(this),
+                    removeObject:     this.removeObject.bind(this),
+                    addCamera:        this.addCamera.bind(this),
+                    changeScene:      this.changeScene.bind(this),
+                    changeHUD:        this.changeHUD.bind(this),
+                    changeCamera:     this.changeCamera.bind(this),
+                    getObject:        this.getObject.bind(this),
+
+                    newText: (renderer, text) => {return new MyTextSquare(renderer, text)},
+                    getEnv: (id) =>              { return this.envs.get(id) },
+                    getClickIntersects: () =>    { return this.clickIntersects },
+                    getMaterial: (id) =>         { return this.materials.get(id) },
+                    getNode: (id) =>             { return this.nodes.get(id) },
+                    setObject: (id, object) =>   { this.objects.set(id, object) },
                 }
             };
         }

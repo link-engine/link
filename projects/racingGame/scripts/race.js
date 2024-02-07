@@ -1,5 +1,6 @@
-import { MyTrack } from "../../../MyTrack.js";
+import { MyTrack } from "../objects/MyTrack.js";
 import { MyTextSquare } from "../../../MyText.js";
+
 const points = [
    -2.447973, 0.125932,
    -6.304742, 3.307700,
