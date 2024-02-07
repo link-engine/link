@@ -1,0 +1,1086 @@
+<yaf>
+  <!-- Powered By YAFX -->
+  <skybox size="2000 2000 2000" center="0 0 0" emissive="0.6 0.6 0.6 1" intensity="0.4" front="projects/racingGame/textures/asgard_front.png" back="projects/racingGame/textures/asgard_back.png" up="projects/racingGame/textures/asgard_top.png" down="projects/racingGame/textures/asgard_bottom.png" right="projects/racingGame/textures/asgard_left.png" left="projects/racingGame/textures/asgard_right.png"/>
+  <globals background="0 0 0 1" ambient="0 0 0 1"/>
+  <envs>
+    <env id="carColor" type="string" value="green"/>
+    <env id="oppColor" type="string" value="orange"/>
+    <env id="username" type="string" value="dasdasj"/>
+    <env id="difficulty" type="number" value="Easy"/>
+  </envs>
+  <fog color="0.1 0.13 0.1 1" near="100" far="300"/>
+  <huds>
+    <hud id="normalHUD">
+      <children>
+        <noderef id="rectangle-yafx-6"/>
+        <noderef id="lap-info-text-container"/>
+        <noderef id="time-elapsed-text-container"/>
+        <noderef id="velocity-text-container"/>
+        <noderef id="text-yafx-8"/>
+        <noderef id="text-yafx-7"/>
+      </children>
+    </hud>
+    <hud id="bananaHUD">
+      <children>
+        <noderef id="model3d-yafx-57"/>
+      </children>
+    </hud>
+  </huds>
+  <cameras initial="Normal Camera">
+    <perspective id="Normal Camera" angle="75" near="0.1" far="1500" location="0 12 -25" target="0 0 0" follow="car" controller="../projects/racingGame/scripts/camera.js" activeHud="normalHUD"/>
+    <perspective id="sideCamera" angle="75" near="0.1" far="1500" location="-100 400 -100" target="-350 0 350" follow="node-yafx-16"/>
+  </cameras>
+  <textures>
+    <texture id="texture-yafx-0" filepath="../projects/racingGame/textures/grass.jpg" mipmaps="true"/>
+    <texture id="texture-yafx-1" filepath="../projects/racingGame/textures/grass_map.png" mipmaps="true"/>
+  </textures>
+  <materials>
+    <material id="material-yafx-0" emissive="0 0 0 1" color="1 1 1 1" specular="0 0 0 1" shininess="0" textureref="texture-yafx-0" texlength_s="1" texlength_t="1" twosided="false" bumpref="texture-yafx-1" bumpscale="0.2" wireframe="false"/>
+  </materials>
+  <shaders>
+    <shader id="brownPulse" vertref="../projects/racingGame/shaders/pulse.vert" fragref="../projects/racingGame/shaders/pulse.frag">
+      <uniform name="time" type="f" value="1"/>
+      <uniform name="color" type="vec3" value="0.5 0.25 0"/>
+      <uniform name="scale" type="f" value="1"/>
+    </shader>
+    <shader id="yellowPulse" vertref="../projects/racingGame/shaders/pulse.vert" fragref="../projects/racingGame/shaders/pulse.frag">
+      <uniform name="time" type="f" value="1"/>
+      <uniform name="color" type="vec3" value="1 1 0"/>
+      <uniform name="scale" type="f" value="1"/>
+    </shader>
+  </shaders>
+  <graph rootid="node-yafx-4" narrowDistance="100">
+    <node id="node-yafx-4" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/race.js" visible="true">
+      <children>
+        <noderef id="node-yafx-6" alias="agility"/>
+        <noderef id="node-yafx-7" alias="strength"/>
+        <noderef id="node-yafx-8" alias="agility"/>
+        <noderef id="node-yafx-9" alias="strength"/>
+        <noderef id="node-yafx-10" alias="agility"/>
+        <noderef id="node-yafx-11" alias="strength"/>
+        <noderef id="node-yafx-12" alias="agility"/>
+        <noderef id="node-yafx-13" alias="strength"/>
+        <noderef id="node-yafx-14" alias="agility"/>
+        <noderef id="node-yafx-15" alias="strength"/>
+        <noderef id="checkpoint-0" alias="checkpoint"/>
+        <noderef id="checkpoint-1" alias="checkpoint"/>
+        <noderef id="checkpoint-2" alias="checkpoint"/>
+        <noderef id="checkpoint-3" alias="checkpoint"/>
+        <noderef id="checkpoint-4" alias="checkpoint"/>
+        <noderef id="checkpoint-5" alias="checkpoint"/>
+        <noderef id="checkpoint-6" alias="checkpoint"/>
+        <noderef id="checkpoint-7" alias="checkpoint"/>
+        <noderef id="checkpoint-8" alias="checkpoint"/>
+        <noderef id="checkpoint-9" alias="checkpoint"/>
+        <noderef id="checkpoint-10" alias="checkpoint"/>
+        <noderef id="checkpoint-11" alias="checkpoint"/>
+        <noderef id="checkpoint-12" alias="checkpoint"/>
+        <noderef id="checkpoint-13" alias="checkpoint"/>
+        <noderef id="checkpoint-14" alias="checkpoint"/>
+        <noderef id="checkpoint-15" alias="checkpoint"/>
+        <noderef id="checkpoint-16" alias="checkpoint"/>
+        <noderef id="checkpoint-17" alias="checkpoint"/>
+        <noderef id="checkpoint-18" alias="checkpoint"/>
+        <noderef id="checkpoint-19" alias="checkpoint"/>
+        <noderef id="checkpoint-20" alias="checkpoint"/>
+        <noderef id="checkpoint-21" alias="checkpoint"/>
+        <noderef id="crate-0" alias="crate"/>
+        <noderef id="banana-0" alias="bananaObstacle"/>
+        <noderef id="crate-1" alias="crate"/>
+        <noderef id="banana-1" alias="bananaObstacle"/>
+        <noderef id="crate-2" alias="crate"/>
+        <noderef id="banana-2" alias="bananaObstacle"/>
+        <noderef id="crate-3" alias="crate"/>
+        <noderef id="banana-3" alias="bananaObstacle"/>
+        <noderef id="crate-4" alias="crate"/>
+        <noderef id="banana-4" alias="bananaObstacle"/>
+        <noderef id="crate-5" alias="crate"/>
+        <noderef id="banana-5" alias="bananaObstacle"/>
+        <noderef id="node-yafx-16"/>
+        <noderef id="plane"/>
+        <noderef id="node-yafx-5"/>
+        <noderef id="car" alias="car"/>
+        <noderef id="oppCar" alias="oppCar"/>
+      </children>
+    </node>
+    <node id="node-yafx-6" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="-334.5815536 7 -18.746219999999994"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-34"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-34" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/agility_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-7" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="-205.4108136 2 -111.52511439999998"/>
+        <scale value3="2 2 2"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-35"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-35" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/strength_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-8" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="-45.59600879999999 7 168.30580480000003"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-36"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-36" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/agility_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-9" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="40.90805680000001 2 301.70571200000006"/>
+        <scale value3="2 2 2"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-37"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-37" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/strength_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-10" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="227.51790320000003 7 356.74612160000004"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-38"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-38" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/agility_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-11" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="247.40087920000002 2 207.6602272"/>
+        <scale value3="2 2 2"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-39"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-39" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/strength_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-12" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="370.3051232 7 -167.38833119999998"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-40"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-40" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/agility_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-13" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="260.6607928 2 -283.9026992"/>
+        <scale value3="2 2 2"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-41"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-41" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/strength_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-14" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="103.44548400000002 7 -368.2704864"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-42"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-42" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/agility_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-15" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/powerup.js" visible="true">
+      <transforms>
+        <translate value3="34.2140416 2 -441.3975432"/>
+        <scale value3="2 2 2"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-43"/>
+      </children>
+      <layers>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-43" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/strength_up.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="checkpoint-0" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="-200.33803360000002 1 -248.040324"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-1" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="-323.9691328 1 -146.4866312"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-2" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="-447.0441088 1 -44.3305752"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-3" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="-334.5815536 1 -18.746219999999994"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-4" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="-205.4108136 1 -111.52511439999998"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-5" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="-91.4659648 1 -119.03163439999997"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-6" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="-119.62539520000001 1 26.4777416"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-7" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="-45.59600879999999 1 168.30580480000003"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-8" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="40.90805680000001 1 301.70571200000006"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-9" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="18.12860640000001 1 455.5049008000001"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-10" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="130.74540560000003 1 478.4893416000001"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-11" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="227.51790320000003 1 356.74612160000004"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-12" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="247.40087920000002 1 207.6602272"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-13" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="352.9341288 1 125.946976"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-14" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="358.6915728 1 -28.024272800000006"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-15" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="370.3051232 1 -167.38833119999998"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-16" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="260.6607928 1 -283.9026992"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-17" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="145.04755360000001 1 -332.2110152"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-18" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="21.31814320000001 1 -254.031632"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-19" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="103.44548400000002 1 -368.2704864"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-20" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="false">
+      <transforms>
+        <translate value3="34.2140416 1 -441.3975432"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-18 -1.5 -18" xyz2="18 1.5 18"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="checkpoint-21" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/checkpoint.js" visible="true">
+      <transforms>
+        <translate value3="-78.129512 1 -348.8088112"/>
+      </transforms>
+      <children>
+        <primitive>
+          <box xyz1="-24 -1 -24" xyz2="24 1 24"/>
+        </primitive>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="crate-0" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/crate.js" visible="true">
+      <materialref id="brownPulse"/>
+      <transforms>
+        <translate value3="-250 0 220"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-45"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-45" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/crate.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="banana-0" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/banana.js" visible="true">
+      <materialref id="yellowPulse"/>
+      <transforms>
+        <translate value3="-350 10 220"/>
+        <scale value3="0.05 0.05 0.05"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-46"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-46" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/banana.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="crate-1" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/crate.js" visible="true">
+      <materialref id="brownPulse"/>
+      <transforms>
+        <translate value3="-250 0 270"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-47"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-47" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/crate.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="banana-1" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/banana.js" visible="true">
+      <materialref id="yellowPulse"/>
+      <transforms>
+        <translate value3="-350 10 270"/>
+        <scale value3="0.05 0.05 0.05"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-48"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-48" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/banana.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="crate-2" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/crate.js" visible="true">
+      <materialref id="brownPulse"/>
+      <transforms>
+        <translate value3="-250 0 320"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-49"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-49" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/crate.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="banana-2" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/banana.js" visible="true">
+      <materialref id="yellowPulse"/>
+      <transforms>
+        <translate value3="-350 10 320"/>
+        <scale value3="0.05 0.05 0.05"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-50"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-50" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/banana.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="crate-3" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/crate.js" visible="true">
+      <materialref id="brownPulse"/>
+      <transforms>
+        <translate value3="-250 0 370"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-51"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-51" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/crate.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="banana-3" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/banana.js" visible="true">
+      <materialref id="yellowPulse"/>
+      <transforms>
+        <translate value3="-350 10 370"/>
+        <scale value3="0.05 0.05 0.05"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-52"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-52" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/banana.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="crate-4" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/crate.js" visible="true">
+      <materialref id="brownPulse"/>
+      <transforms>
+        <translate value3="-250 0 420"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-53"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-53" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/crate.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="banana-4" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/banana.js" visible="true">
+      <materialref id="yellowPulse"/>
+      <transforms>
+        <translate value3="-350 10 420"/>
+        <scale value3="0.05 0.05 0.05"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-54"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-54" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/banana.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="crate-5" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/crate.js" visible="true">
+      <materialref id="brownPulse"/>
+      <transforms>
+        <translate value3="-250 0 470"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-55"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-55" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/crate.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="banana-5" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/banana.js" visible="true">
+      <materialref id="yellowPulse"/>
+      <transforms>
+        <translate value3="-350 10 470"/>
+        <scale value3="0.05 0.05 0.05"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-56"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-56" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/banana.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-16" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-350 0 350"/>
+      </transforms>
+      <children>
+        <noderef id="parkingLot"/>
+      </children>
+    </node>
+    <node id="parkingLot" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <scale value3="10 1 10"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-44" alias="parkingLot"/>
+      </children>
+    </node>
+    <node id="model3d-yafx-44" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="0 0.3 0"/>
+        <scale value3="3 1 3"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/parking_lot.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="plane" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <materialref id="material-yafx-0"/>
+      <transforms>
+        <translate value3="0 -0.5 0"/>
+        <rotate value3="-1.5707963267948966 0 0"/>
+      </transforms>
+      <children>
+        <noderef id="rectangle-yafx-5"/>
+      </children>
+    </node>
+    <node id="rectangle-yafx-5" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <rectangle xy1="-1300 -1300" xy2="1300 1300"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="node-yafx-5" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <noderef id="pointlight-node-yafx-4"/>
+        <noderef id="pointlight-node-yafx-5"/>
+      </children>
+    </node>
+    <node id="pointlight-node-yafx-4" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-100 125 0"/>
+      </transforms>
+      <children>
+        <pointlight id="primitive-pointlight-node-yafx-4" enabled="true" castshadow="true" color="1 0.87 0.54 1" intensity="0.5" shadowmapsize="4096" distance="1000" decay="0" position="-100 125 0"/>
+      </children>
+    </node>
+    <node id="pointlight-node-yafx-5" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-150 50 0"/>
+      </transforms>
+      <children>
+        <pointlight id="primitive-pointlight-node-yafx-5" enabled="true" castshadow="false" color="1 0.87 0.54 1" intensity="0.5" shadowmapsize="4096" distance="100" decay="0" position="-150 50 0"/>
+      </children>
+    </node>
+    <node id="car" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/carController.js" visible="true">
+      <body id="body-yafx-4" type="kinematic" collider="ball" size="1 1 1"/>
+      <transforms>
+        <translate value3="-100.447973 2 -349.874068"/>
+        <rotate value3="0 -0.6981317007977318 0"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-24" alias="frame"/>
+        <noderef id="model3d-yafx-27" alias="frontWheel"/>
+        <noderef id="model3d-yafx-28" alias="frontWheel"/>
+        <noderef id="model3d-yafx-25" alias="backWheel"/>
+        <noderef id="model3d-yafx-26" alias="backWheel"/>
+      </children>
+      <layers>
+        <layer id="1"/>
+        <layer id="2"/>
+        <layer id="3"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-24" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_frame_green.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-27" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-2 -0.6 3.8"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-28" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="2 -0.6 3.8"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-25" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-2 -0.6 -3"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-26" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="2 -0.6 -3"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="oppCar" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/carAI.js" visible="true">
+      <body id="body-yafx-5" type="kinematic" collider="ball" size="1 1 1"/>
+      <children>
+        <noderef id="model3d-yafx-29" alias="frame"/>
+        <noderef id="model3d-yafx-32" alias="frontWheel"/>
+        <noderef id="model3d-yafx-33" alias="frontWheel"/>
+        <noderef id="model3d-yafx-30" alias="backWheel"/>
+        <noderef id="model3d-yafx-31" alias="backWheel"/>
+      </children>
+      <layers>
+        <layer id="2"/>
+      </layers>
+    </node>
+    <node id="model3d-yafx-29" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_frame_orange.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-32" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-2 -0.6 3.8"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-33" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="2 -0.6 3.8"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-30" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-2 -0.6 -3"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-31" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="2 -0.6 -3"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="rectangle-yafx-6" castshadows="false" receiveshadows="true" controller="../projects/racingGame/scripts/minimap.js" visible="true">
+      <transforms>
+        <translate value3="20 5 -25"/>
+      </transforms>
+      <children>
+        <primitive>
+          <rectangle xy1="-5 -5" xy2="5 5"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="lap-info-text-container" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-28 15 -25"/>
+      </transforms>
+      <children>
+        <noderef id="text-yafx-9"/>
+      </children>
+    </node>
+    <node id="text-yafx-9" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <text content="Lap 1/3" font="" bg="0 0 0" color="1 1 1" fit="no-fit" width="20" fontSize="1"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="time-elapsed-text-container" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-28 17 -25"/>
+      </transforms>
+      <children>
+        <noderef id="text-yafx-11"/>
+      </children>
+    </node>
+    <node id="text-yafx-11" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <text content="Time Elapsed: 0" font="" bg="0 0 0" color="1 1 1" fit="no-fit" width="20" fontSize="1"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="velocity-text-container" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-28 16 -25"/>
+      </transforms>
+      <children>
+        <noderef id="text-yafx-10"/>
+      </children>
+    </node>
+    <node id="text-yafx-10" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <text content="Velocity: 0" font="" bg="0 0 0" color="1 1 1" fit="no-fit" width="20" fontSize="1"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="text-yafx-8" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-28 14 -25"/>
+      </transforms>
+      <children>
+        <primitive>
+          <text content="Level : Easy" font="" bg="0 0 0" color="1 1 1" fit="no-fit" width="15" fontSize="1"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="text-yafx-7" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-28 13 -25"/>
+      </transforms>
+      <children>
+        <primitive>
+          <text content="Player: dasdasj" font="" bg="0 0 0" color="1 1 1" fit="no-fit" width="20" fontSize="1"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-57" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <children>
+        <primitive>
+          <model3d filepath="../projects/racingGame/models/banana.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+  </graph>
+</yaf>
