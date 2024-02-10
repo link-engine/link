@@ -8,6 +8,7 @@ class SceneManager {
 
     constructor(app) {
 
+        
         this.scenes       = new Map();
         this.currentScene = 'race';
         this.app          = app;
@@ -31,9 +32,8 @@ class SceneManager {
         });
 
         
-        this.app.resetScene()
-        
-        let reader = new MyFileReader(this.app);
+        this.app.resetScene();
+        let reader = new MyFileReader();
         let xmlData;
         
         await fetch(yafxOutput).then((response) => {
@@ -50,10 +50,8 @@ class SceneManager {
         await contents.onSceneLoaded(reader.data)
         contents.loadModels();
 
-        
-        
-        contents.startScene()
-        contents.init()
+        this.app.startScene()
+        this.app.init()
 
         return contents;
     }
