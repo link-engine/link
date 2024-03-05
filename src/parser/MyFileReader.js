@@ -24,12 +24,8 @@ import { MySceneData } from './MySceneData.js';
 
 class MyFileReader  {
 
-    /**
-       constructs the object
-       @param {MyApp} app The application object
-    */ 
-    constructor(app) {
-        this.app = app
+    constructor() {
+		
         this.xmlhttp = null;
         this.xmlDoc = null;
         this.xmlloaded = false;	

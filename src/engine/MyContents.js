@@ -15,33 +15,24 @@ import { MyTextRenderer } from './MyTextRenderer.js';
  */
 class MyContents {
 
-    /**
-       constructs the object
-       @param {MyApp} app The application object
-    */
-    constructor(app) {
+    constructor() {
 
-        this.usePhysics = false;
-        this.paused = false;
-        this.loading = false;
-        this.narrowDistance = null;
-        this.app = app
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x101010);
+
+        this.modelsLoaded = false;
+        this.modelsStarted = false;
         this.axis = null
         this.envs = new Map()
         this.numObjectsLoaded = 0;
-        this.modelsLoaded = false;
-        this.modelsStarted = false;
-        this.clickIntersects = []
-        this.eventMap = new Map();
         this.alias = new Map();
         this.layers = new Map();
         this.objects = new Map();
         this.nodes = new Map();
         this.textures = new Map();
         this.materials = new Map();
-        this.cameras = new Map();
+        this.cameras = []
         this.huds = new Map();
-        this.collisionQueue = null;
         this.lights = new Map();
         this.mixers = new Map();
         this.models = new Map();
@@ -51,23 +42,17 @@ class MyContents {
         this.fonts.set("default", new MyTextRenderer("fonts/default.png", 70, 10, 10, 32));
 
         this.loader = new GLTFLoader();
-        this.shadowsOn = true;
-        this.counter = 0;
-        this.physics = null
-        this.rapier = null
 
-        this.eventQueue = [];
         this.objectProperties = new Map();
         this.cameraControllers = new Map();
         this.cameraHuds = new Map();
         this.controllers = new Map();
-        this.cameraFollow = new Map();
         this.fillingTypes = ["normal", "wireframe"];
         this.fillingTracker = new MyUpdatable({ filling: "normal" });
 
         const onFillingChange = () => {
             const wireFrame = this.fillingTracker.o.filling == "wireframe";
-            this.app.scene.traverse((obj) => {
+            this.scene.traverse((obj) => {
                 if (obj.material) {
                     obj.material.wireframe = wireFrame;
                 }
@@ -287,13 +272,13 @@ class MyContents {
         if (this.axis === null) {
             // create and attach the axis to the scene
             this.axis = new MyAxis(this)
-            this.app.scene.add(this.axis)
+            this.scene.add(this.axis)
         }
     }
 
     reset() {
-        this.app.scene = new THREE.Scene();
-        this.app.scene.background = new THREE.Color(0x101010);
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x101010);
         this.axis = null;
         this.numObjectsLoaded = 0;
         this.modelsLoaded = false;
@@ -306,12 +291,11 @@ class MyContents {
         this.objects.clear();
         this.textures.clear();
         this.materials.clear();
-        this.cameras.clear();
+        this.cameras = []
         this.lights.clear();
         this.mixers.clear();
         this.models.clear();
         this.controllers.clear();
-        this.cameraFollow.clear();
         this.eventQueue = [];
         this.objectProperties.clear();
         this.updatables = [this.fillingTracker, this.editor, this.selectedLightTracker];
@@ -408,15 +392,13 @@ class MyContents {
     removeObject(object) {
         if (object.parent)
             object.parent.remove(object);
-        else this.app.scene.remove(object);
+        else this.scene.remove(object);
         this.removeAllChildren(object);
     }
 
     addCamera(camera, cameraName) {
 
         this.cameras.set(cameraName, camera);
-        this.app.addCamera(camera, cameraName);
-
     }
 
     getObject(id) {
@@ -444,76 +426,12 @@ class MyContents {
             }
         }
     }
-    
-    getParams() {
-        if (this.params === null || this.params === undefined) {
-            this.params = {
-                object: null,
-                otherObject: null,
-                mixer: null,
-                input: this.app.keys,
-                aliasTable: this.alias,
-                eventQueue: this.eventQueue,
-                eventMap: this.eventMap,
-                camera: this.app.activeCamera,
-                clock: this.app.clock,
-                updateDelta: this.app.clock.getDelta(),
-                renderer: this.app.renderer,
-                scene: this.app.scene,
-                textRenderer: this.fonts.get("default"),
-                ENGINE: {
-                    pushEvent:    this.pushEvent.bind(this),
-                    registerListener: this.registerListener.bind(this),
-                    removeListener:   this.removeListener.bind(this),
-                    removeObject:     this.removeObject.bind(this),
-                    addCamera:        this.addCamera.bind(this),
-                    changeScene:      this.changeScene.bind(this),
-                    changeHUD:        this.changeHUD.bind(this),
-                    changeCamera:     this.changeCamera.bind(this),
-                    getObject:        this.getObject.bind(this),
-
-                    newText: (renderer, text) => {return new MyTextSquare(renderer, text)},
-                    getEnv: (id) =>              { return this.envs.get(id) },
-                    getClickIntersects: () =>    { return this.clickIntersects },
-                    getMaterial: (id) =>         { return this.materials.get(id) },
-                    getNode: (id) =>             { return this.nodes.get(id) },
-                    setObject: (id, object) =>   { this.objects.set(id, object) },
-                }
-            };
-        }
-
-        return this.params;
-    }
-
-    startObjects() {
-
-        if (!this.modelsLoaded)
-            return;
-
-        let params = this.getParams();
-
-        for (const [object, controller] of this.controllers.entries()) {
-
-            params.object = object;
-            params.mixer = this.mixers.get(object.id);
-            controller.onStart(params);
-        }
-
-        this.modelsStarted = true;
-
-    }
-    startScene() {
-
-        this.createScene();
-        this.startObjects();
-
-    }
 
     createScene() {
 
         const rootObject = this.objects.get(this.rootId);
         this.editor.o.node = rootObject;
-        this.app.scene.add(rootObject);
+        this.scene.add(rootObject);
 
     }
 
@@ -539,7 +457,7 @@ class MyContents {
 
     addBoundingBox(object, color) {
         const boundingBox = new THREE.BoxHelper(object, color);
-        this.app.scene.add(boundingBox);
+        this.scene.add(boundingBox);
         return boundingBox;
     }
     convertValue(value, type) {
@@ -733,7 +651,7 @@ class MyContents {
                 materialArray[i].side = THREE.BackSide;
             }
             const skyboxMesh = new THREE.Mesh(geometry, materialArray);
-            this.app.scene.add(skyboxMesh);
+            this.scene.add(skyboxMesh);
         }
 
         console.log("textures:")
@@ -788,14 +706,11 @@ class MyContents {
         }
 
         console.log("cameras:")
-        this.app.setCameras(data.cameras, data.activeCameraId)
-
 
         for (var key in data.cameras) {
             let camera = data.cameras[key]
-            if (camera.follow) {
-                this.cameraFollow.set(camera.id, camera.follow)
-            }
+            this.addCamera(camera, key)
+
             if (camera.controller) {
                 this.cameraControllers.set(camera.id, camera.controller)
             }
@@ -1352,133 +1267,6 @@ class MyContents {
 
             visited.add(object);
         }
-
-    }
-
-    changeHUD(hud) {
-
-        const camera = this.app.activeCameraName;
-        this.cameraHuds.set(camera, this.huds.get(hud));
-
-    }
-
-    changeCamera(camera) {
-        this.app.setActiveCamera(camera);
-    }
-
-    changeScene(scene) {
-
-
-        let root = this.objects.get(this.rootId);
-        let rootController = this.controllers.get(root);
-        this.app.changeScene(scene, rootController.exports);
-        this.loading = true;
-
-    }
-
-    triggerEvents() {
-
-        for (const event of this.eventQueue) {
-            let eventName = "";
-
-            if (typeof event == "string") {
-
-                eventName = event;
-            }
-            else {
-                eventName = event.name;
-            }
-            const listeners = this.eventMap.get(eventName);
-
-            if (listeners) {
-                for (const listener of listeners) {
-                    listener(event);
-                }
-            }
-        }
-
-        this.eventQueue = [];
-        this.clickIntersects = [];
-
-    }
-
-    updateCamera() {
-
-        let object = null
-        const controls = this.app.controls;
-        const camera = this.app.activeCamera;
-        const cameraId = this.app.activeCameraName;
-        const controller = this.cameraControllers.get(cameraId);
-        const follow = this.cameraFollow.get(cameraId);
-        const hud = this.cameraHuds.get(cameraId);
-
-        if (follow) {
-            object = this.objects.get(follow);
-        }
-
-        if (controller)
-            controller.onUpdate({ camera: camera, controls: controls, hud: hud, object: object });
-
-    }
-
-    updateObjects() {
-
-        let params = this.getParams()
-
-        for (const [object, controller] of this.controllers.entries()) {
-
-            params.object = object;
-            params.mixer = this.mixers.get(object.id);
-            params.textRenderer = this.fonts.get("default");
-            controller.onUpdate(params);
-        }
-    }
-
-    updateParticles() {
-
-        const aliveParticles = [];
-        for (const particle of this.particles) {
-            if (!particle.isDone()) {
-                particle.update(this.app.clock);
-                aliveParticles.push(particle);
-            }
-            else {
-                const mesh = particle.mesh;
-                mesh.parent.remove(mesh);
-            }
-        }
-        this.particles = aliveParticles;
-    }
-
-    runUpdatables() {
-
-        for (const updatable of this.updatables) {
-            updatable.run();
-        }
-
-    }
-
-    handleCollisions() {
-        if (this.usePhysics)
-            this.physics.step(this.collisionQueue);
-        else this.checkCollisions();
-    }
-
-    update() {
-        this.params = null;
-        if (!this.modelsStarted) {
-            this.startObjects();
-            return;
-        }
-
-        if (this.paused || this.loading) return;
-
-        this.runUpdatables();
-        this.handleCollisions();
-        this.triggerEvents();
-        this.updateParticles();
-        this.updateCamera();
-        this.updateObjects();
 
     }
 }
