@@ -61,6 +61,7 @@ class MyFileReader  {
 			this.loadShaders(rootElement);
 			await this.loadCameras(rootElement);
 			await this.loadNodes(rootElement);
+			this.loadJoints(rootElement);
 			this.loadHUDs(rootElement);
 
 		}
@@ -635,6 +636,21 @@ class MyFileReader  {
 			}
 		}
 	}
+
+	loadJoints(rootElement) {
+
+		let elem = rootElement.getElementsByTagName('joints')[0]
+		let jointElements =  elem.getElementsByTagName('joint');
+
+		for (let i=0; i < jointElements.length; i++) {
+			let jointElement = jointElements[i];
+			let id = this.getString(jointElement, "id");
+			let joint = this.data.createEmptyJoint(id)
+			this.loadChildren(joint, jointElement)
+		}
+
+	}
+
 
 
 	loadHUDs(rootElement) {

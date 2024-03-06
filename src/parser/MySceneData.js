@@ -25,6 +25,7 @@ class MySceneData {
 
         this.envs = new Map()
         this.huds = new Map();
+        this.joints = new Map();
         this.cameras = [];
         this.activeCameraId = null;
         this.alias = new Map();
@@ -284,7 +285,7 @@ class MySceneData {
             { name: "shadowmapsize", type: "integer", required: false, default: 512 },
         ]
 
-        this.primaryNodeIds = ["globals", "fog", "envs", "skybox", "huds", "textures", "materials", "shaders", "cameras", "graph"]
+        this.primaryNodeIds = ["globals", "fog", "envs", "skybox", "huds", "joints", "textures", "materials", "shaders", "cameras", "graph"]
 
         this.primitiveIds = ["cylinder", "rectangle", "triangle", "sphere", "nurbs", "box", "model3d", "skybox", "lod", "polygon", "text", "particle"]
     }
@@ -437,6 +438,12 @@ class MySceneData {
         console.debug("added light " + JSON.stringify(light));
     }
 
+    getJoint(id) {
+        let value = this.joints.get(id)
+        if (value === undefined) return null
+        return value
+    }
+
     getHUD(id) {
         let value = this.huds.get(id);
         if (value === undefined) return null
@@ -473,6 +480,16 @@ class MySceneData {
 
     addAlias(id, alias) {
         this.alias.set(id, alias)
+    }
+
+    addJoint(joint) {
+        let obj = this.getJoint(joint.id)
+        if (obj !== null && obj !== undefined) {
+            throw new Error("inconsistency: a joint with id " + joint.id + " already exists!");
+        }
+        this.joints.set(joint.id, joint);
+        this.createCustomAttributeIfNotExists(joint)
+        console.debug("added joint " + JSON.stringify(joint));
     }
 
     addHUD(hud) {

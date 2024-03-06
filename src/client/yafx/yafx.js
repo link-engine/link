@@ -223,7 +223,7 @@ export class Scene {
 
         result += singleTag("fog", this.fog);
         result += this.listToString("huds", this.huds);
-
+        result += this.listToString("joints", this.joints);
         result += this.listToString("cameras", this.cameras, { initial: this.initialCamera.id });
         result += this.listToString("textures", this.textures.values());
         result += this.listToString("materials", this.materials.values());
@@ -381,6 +381,7 @@ export class Node extends InstanceCounter {
         super(id);
         this.children = [];
         this.rigibody = null;
+        this.collider = null;
         this.positions = [];
         this.rotations = [];
         this.scales = [];
@@ -403,6 +404,8 @@ export class Node extends InstanceCounter {
         let u = `<node id="${this.id}" castshadows="${this.castshadows}" receiveshadows="${this.receiveshadows}" controller="${this.controller}" visible="${this.visible}">
        ${this.material ? this.material.getRef() : ""}
        ${this.body ? this.body.toString() : ""}
+       ${this.rigidbody ? this.rigidbody.toString() : ""}
+       ${this.collider ? this.collider.toString() : ""}
        ${transformsToString(this)}
        ${this.childrenToString()}
        ${this.layersToString()}
