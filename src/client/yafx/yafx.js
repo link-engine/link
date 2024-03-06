@@ -59,6 +59,7 @@ function attributesToString(attributes) {
 
 
 function complexTag(name, attributes, childName, children) {
+
     let result = "<" + name + " ";
     result += attributesToString(attributes);
     result += ">";
@@ -79,8 +80,47 @@ function singleTag(name, attributes) {
 }
 
 
+function transformsToString(object) {
+    // gather transforms
+    const transformations = getTransforms(object);
+    if (transformations.length == 0) {
+        return "";
+    }
+    let result = "<transforms>"
+    for (const transformation of transformations) {
+        result += transformation;
+    }
+    result += "</transforms>";
+    return result;
+}
+
+function getTransforms(object) {
+    const transforms = [];
+    if (!positionDefault(object.position)) {
+        transforms.push(singleTag("translate", { value3: object.position }));
+    }
+    if (!scaleDefault(object.scale)) {
+        transforms.push(singleTag("scale", { value3: object.scale }));
+    }
+    if (!rotateDefault(object.rotation)) {
+        const degToRad = deg => Math.PI * deg / 180;
+        const rotationInRads = [
+            degToRad(object.rotation.x),
+            degToRad(object.rotation.y),
+            degToRad(object.rotation.z),
+        ];
+
+        transforms.push(singleTag("rotate", { value3: rotationInRads }));
+    }
+
+    return transforms;
+
+}
+
+
 export class Scene {
     constructor() {
+        this.joints = [];
         this.globals = { background: [0, 0, 0, 1], ambient: [0, 0, 0, 1] };
         this.envs = [];
         this.fog = { color: [0.1, 0.13, 0.1, 1], near: 100, far: 300 };
@@ -254,10 +294,93 @@ function scaleDefault(v) {
     return areEqual(v, 1, 1, 1);
 }
 
+export class Joint extends InstanceCounter {
+    constructor(id = null) {
+        super(id);
+        this.firstRigidbody = null
+        this.secondRigidbody = null
+        this.anchors = [];
+        this.motor = null;
+    }
+    defaultId(id) {
+        return "joint-yafx-" + id;
+    }
+
+    anchorsToString() {
+        if (this.anchors.length == 0) {
+            return "";
+        }
+        let result = "<anchors>"
+        for (const anchor of this.anchors) {
+            result += singleTag("anchor", anchor);
+        }
+        result += "</anchors>";
+        return result;
+    }
+
+    toString() {
+        
+        let u = `<joint id="${this.id}" motor="${this.controller}" rigidbody1="${this.firstRigidbody}" rigidbody2="${this.secondRigidbody}">
+       ${this.anchorsToString()}
+       </joint>
+       `
+        return u
+    }
+}
+
+export class Collider extends InstanceCounter {
+    constructor(id = null) {
+        super(id);
+        this.type = "box";
+        this.positions = [];
+        this.rotations = [];
+        this.scales = [];
+
+
+    }
+
+    defaultId(id) {
+        return "collider-yafx-" + id;
+    }
+
+    toString() {
+        let u = `<collider id="${this.id}" type="${this.type}">
+         ${transformsToString(this)}
+         </collider>
+            `
+        return u;
+    }
+
+}
+
+export class RigidBody extends InstanceCounter {
+    constructor(id = null) {
+        super(id);
+        this.type = "kinematic";
+        this.positions = [];
+        this.rotations = [];
+        this.scales = [];
+    }
+
+    defaultId(id) {
+        return "rigidbody-yafx-" + id;
+    }
+
+    toString() {
+        let u = `<rigidbody id="${this.id}" type="${this.type}">
+         ${transformsToString(this)}
+         </rigidbody>
+            `
+        return u;
+    }
+}
+
+
 export class Node extends InstanceCounter {
     constructor(id = null) {
         super(id);
         this.children = [];
+        this.rigibody = null;
         this.positions = [];
         this.rotations = [];
         this.scales = [];
@@ -280,46 +403,12 @@ export class Node extends InstanceCounter {
         let u = `<node id="${this.id}" castshadows="${this.castshadows}" receiveshadows="${this.receiveshadows}" controller="${this.controller}" visible="${this.visible}">
        ${this.material ? this.material.getRef() : ""}
        ${this.body ? this.body.toString() : ""}
-       ${this.transformsToString()}
+       ${transformsToString(this)}
        ${this.childrenToString()}
        ${this.layersToString()}
        </node>
        `
         return u;
-    }
-    transformsToString() {
-        // gather transforms
-        const transformations = this.getTransforms();
-        if (transformations.length == 0) {
-            return "";
-        }
-        let result = "<transforms>"
-        for (const transformation of transformations) {
-            result += transformation;
-        }
-        result += "</transforms>";
-        return result;
-    }
-    getTransforms() {
-        const transforms = [];
-        if (!positionDefault(this.position)) {
-            transforms.push(singleTag("translate", { value3: this.position }));
-        }
-        if (!scaleDefault(this.scale)) {
-            transforms.push(singleTag("scale", { value3: this.scale }));
-        }
-        if (!rotateDefault(this.rotation)) {
-            const degToRad = deg => Math.PI * deg / 180;
-            const rotationInRads = [
-                degToRad(this.rotation.x),
-                degToRad(this.rotation.y),
-                degToRad(this.rotation.z),
-            ];
-
-            transforms.push(singleTag("rotate", { value3: rotationInRads }));
-        }
-        return transforms;
-
     }
 
     layersToString() {
