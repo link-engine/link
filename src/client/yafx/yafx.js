@@ -138,6 +138,9 @@ export class Scene {
         };
 
 
+        this.rigibodies = new Map();
+        this.colliders = new Map();
+
         this.textures = new Map();
         this.materials = new Map();
         this.shaders = new Map();
@@ -183,6 +186,13 @@ export class Scene {
 
             }
         }
+
+        if (node.rigibody) {
+            this.rigibodies.set(node.rigibody.id, node.rigibody);
+        }
+        if (node.collider) {
+            this.colliders.set(node.collider.id, node.collider);
+        }
     }
     flattenChildren(children) {
         for (const child of children) {
@@ -227,6 +237,8 @@ export class Scene {
         result += this.listToString("cameras", this.cameras, { initial: this.initialCamera.id });
         result += this.listToString("textures", this.textures.values());
         result += this.listToString("materials", this.materials.values());
+        result += this.listToString("rigibodies", this.rigibodies.values());
+        result += this.listToString("colliders", this.colliders.values());
         result += this.listToString("shaders", this.shaders.values());
 
         result += `<graph rootid="${this.root.id}" narrowDistance="${this.narrowDistance}">`;
@@ -404,8 +416,6 @@ export class Node extends InstanceCounter {
         let u = `<node id="${this.id}" castshadows="${this.castshadows}" receiveshadows="${this.receiveshadows}" controller="${this.controller}" visible="${this.visible}">
        ${this.material ? this.material.getRef() : ""}
        ${this.body ? this.body.toString() : ""}
-       ${this.rigidbody ? this.rigidbody.toString() : ""}
-       ${this.collider ? this.collider.toString() : ""}
        ${transformsToString(this)}
        ${this.childrenToString()}
        ${this.layersToString()}

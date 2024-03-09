@@ -62,6 +62,8 @@ class MyFileReader  {
 			await this.loadCameras(rootElement);
 			await this.loadNodes(rootElement);
 			this.loadJoints(rootElement);
+			this.loadRigidbodies(rootElement);
+			this.loadColliders(rootElement);
 			this.loadHUDs(rootElement);
 
 		}
@@ -651,7 +653,43 @@ class MyFileReader  {
 
 	}
 
+	loadRigidbodies(rootElement) {
+		
+		let elem = rootElement.getElementsByTagName('rigidbodies')[0]
+		let rigidbodyElements =  elem.getElementsByTagName('rigidbody');
 
+		for (let i=0; i < rigidbodyElements.length; i++) {
+			let rigidbodyElement = rigidbodyElements[i];
+			let id = this.getString(rigidbodyElement, "id");
+			let rigidbody = this.data.createEmptyRigidbody(id)
+
+			let transforms =  rigidbodyElement.getElementsByTagName('transforms')
+			if (transforms !== null && transforms.length > 0) {
+				this.loadTransforms(rigidbody, transforms[0])
+			}
+
+		}
+
+	}
+
+	loadColliders(rootElement) {
+		let elem = rootElement.getElementsByTagName('colliders')[0]
+		let colliderElements =  elem.getElementsByTagName('collider');
+
+		for (let i=0; i < colliderElements.length; i++) {
+			let colliderElement = colliderElements[i];
+			let id = this.getString(colliderElement, "id");
+			let collider = this.data.createEmptyCollider(id)
+
+			let transforms =  colliderElement.getElementsByTagName('transforms')
+			if (transforms !== null && transforms.length > 0) {
+				this.loadTransforms(collider, transforms[0])
+			}
+
+		}
+
+	}
+			
 
 	loadHUDs(rootElement) {
 	

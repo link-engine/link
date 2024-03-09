@@ -23,6 +23,9 @@ class MySceneData {
         this.lights = [];
         this.textures = [];
 
+
+        this.rigidbodies = new Map();
+        this.colliders = new Map();
         this.envs = new Map()
         this.huds = new Map();
         this.joints = new Map();
@@ -450,6 +453,19 @@ class MySceneData {
         return value
     }
 
+    getRigidBody(id) {
+        let value = this.rigidbodies.get(id);
+        if (value === undefined) return null
+        return value
+    }
+
+    getCollider(id) {
+        let value = this.colliders.get(id);
+        if (value === undefined) return null
+        return value
+    }
+
+
     getNode(id) {
         let value = this.nodes[id];
         if (value === undefined) return null
@@ -465,6 +481,27 @@ class MySceneData {
         this.addHUD(hud);
         return hud;
 
+    }
+
+    createEmptyRigidBody(id) {
+        let obj = this.getRigidBody(id)
+        if (obj !== null && obj !== undefined) {
+            throw new Error("inconsistency: a rigid body with id " + id + " already exists!");
+        }
+        obj = { id: id, transformations: [], type: null };
+        this.rigidbodies.set(id, obj);
+        return obj;
+    }
+
+    createEmptyCollider(id) {
+
+        let obj = this.getCollider(id)
+        if (obj !== null && obj !== undefined) {
+            throw new Error("inconsistency: a collider with id " + id + " already exists!");
+        }
+        obj = { id: id, transformations: [], type: null };
+        this.colliders.set(id, obj);
+        return obj;
     }
 
     createEmptyNode(id) {

@@ -36,6 +36,8 @@ class MyContents {
         this.lights = new Map();
         this.mixers = new Map();
         this.models = new Map();
+        this.rigidbodies = new Map();
+        this.colliders = new Map();
         this.particles = [];
 
         this.fonts = new Map();
@@ -703,6 +705,21 @@ class MyContents {
 
 
             this.huds.set(hud, hudObject);
+        }
+
+        for (const [rigidbody, rigidbodyElement] of data.rigidbodies.entries()) {
+
+            // continue here with RAPIER logic
+            let r;
+            this.rigidbodies.set(rigidbody, r);
+
+        }
+
+
+        for (const [collider, colliderElement] of data.colliders.entries()) {
+            // continue here with RAPIER logic
+            let c;
+            this.colliders.set(collider, c);
         }
 
         console.log("cameras:")
