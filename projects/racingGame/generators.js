@@ -1,4 +1,4 @@
-import * as yafx from "../../../yafx/yafx.js";
+import * as yafx from "../../../src/client/yafx/yafx.js";
 import { Vector3 } from "three";
 
 

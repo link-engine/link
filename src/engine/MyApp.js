@@ -4,13 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { MyContents } from './MyContents.js';
 import { MyGuiInterface } from './MyGuiInterface.js';
 import Stats from 'three/addons/libs/stats.module.js'
-import { SceneManager } from './projects/racingGame/sceneManager.js';
-import { MyFileReader } from '../../parser/MyFileReader.js';
+import { MyFileReader } from '../parser/MyFileReader.js';
 
-import * as raceScene from './scenes/race.js';
-import * as menuScene from './scenes/menu.js';
-import * as testScene from './scenes/test.js';
-import * as resultsScene from './scenes/results.js';
+import * as testScene from '../../projects/racingGame/scenes/test.js';
 
 
 
@@ -27,10 +23,8 @@ class MyApp {
         this.scenes       = new Map();
         this.currentScene = 'race';
         this.app          = app;
-        this.scenes.set("race", raceScene);
-        this.scenes.set("menu", menuScene);
+
         this.scenes.set("test", testScene);
-        this.scenes.set("results", resultsScene);
         
         this.project = null
         this.clock     = new THREE.Clock();
@@ -112,10 +106,10 @@ class MyApp {
         // complete here 
     }
 
-    async changeScene(sceneName, context) {
+    async changeScene(sceneName, context = null) {
 
-
-        const yafxScenes = "./projects/";
+        debugger
+        const yafxScenes = "../../projects/";
         const project    = "racingGame";
         const yafxOutput = yafxScenes + `${project}/scenes/${sceneName}.xml`;
         
@@ -144,7 +138,7 @@ class MyApp {
         await reader.readXML();
         await this.contents.onSceneLoaded(reader.data)
         this.contents.loadModels();
-
+        
         this.startScene()
         this.init()
 
