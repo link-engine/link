@@ -20,6 +20,7 @@ class MyContents {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x101010);
 
+        this.activeCameraId = null;
         this.modelsLoaded = false;
         this.modelsStarted = false;
         this.axis = null
@@ -41,7 +42,7 @@ class MyContents {
         this.particles = [];
 
         this.fonts = new Map();
-        this.fonts.set("default", new MyTextRenderer("fonts/default.png", 70, 10, 10, 32));
+        this.fonts.set("default", new MyTextRenderer("../fonts/default.png", 70, 10, 10, 32));
 
         this.loader = new GLTFLoader();
 
@@ -287,7 +288,6 @@ class MyContents {
         this.modelsStarted = false;
         this.paused = false
         this.loading = false
-        this.eventMap.clear();
         this.alias.clear();
         this.layers.clear();
         this.objects.clear();
@@ -400,34 +400,13 @@ class MyContents {
 
     addCamera(camera, cameraName) {
 
-        this.cameras.set(cameraName, camera);
+        this.cameras[cameraName] = camera;
     }
 
     getObject(id) {
         return this.objects.get(id);
     }
 
-    pushEvent(event) {
-        this.eventQueue.push(event);
-    }
-
-    registerListener(event, listener) {
-
-        if (!this.eventMap.has(event)) {
-            this.eventMap.set(event, []);
-        }
-        this.eventMap.get(event).push(listener);
-    }
-
-    removeListener(event, listener) {
-        if (this.eventMap.has(event)) {
-            const listeners = this.eventMap.get(event);
-            const index = listeners.indexOf(listener);
-            if (index > -1) {
-                listeners.splice(index, 1);
-            }
-        }
-    }
 
     createScene() {
 
@@ -723,7 +702,7 @@ class MyContents {
         }
 
         console.log("cameras:")
-
+        this.activeCameraId = data.activeCameraId;
         for (var key in data.cameras) {
             let camera = data.cameras[key]
             this.addCamera(camera, key)
@@ -1200,7 +1179,7 @@ class MyContents {
             object = this.visitLightNode(node)
         }
         else {
-            debugger
+            
             console.error("Bad Node Type Or node without children");
             console.log(node);
         }

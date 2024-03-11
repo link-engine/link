@@ -1,0 +1,122 @@
+<yaf>
+  <!-- Powered By YAFX -->
+  <skybox size="2000 2000 2000" center="0 0 0" emissive="0.6 0.6 0.6 1" intensity="0.4" front="/projects/racingGame/textures/asgard_front.png" back="/projects/racingGame/textures/asgard_back.png" up="/projects/racingGame/textures/asgard_top.png" down="/projects/racingGame/textures/asgard_bottom.png" right="/projects/racingGame/textures/asgard_left.png" left="/projects/racingGame/textures/asgard_right.png"/>
+  <globals background="0 0 0 1" ambient="0 0 0 1"/>
+  <envs/>
+  <fog color="0.1 0.13 0.1 1" near="100" far="300"/>
+  <huds/>
+  <joints/>
+  <cameras initial="Normal Camera">
+    <perspective id="Normal Camera" angle="75" near="0.1" far="1500" location="0 20 70" target="0 0 0"/>
+  </cameras>
+  <textures/>
+  <materials/>
+  <rigidbodies>
+    <rigidbody id="rigidbody-yafx-0" type="kinematic">
+      <transforms>
+        <translate value3="0 0 0"/>
+      </transforms>
+    </rigidbody>
+  </rigidbodies>
+  <colliders/>
+  <shaders/>
+  <graph rootid="node-yafx-0" narrowDistance="100">
+    <node id="node-yafx-0" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="0 0 0"/>
+      </transforms>
+      <children>
+        <noderef id="node-yafx-1"/>
+        <noderef id="car"/>
+      </children>
+    </node>
+    <node id="node-yafx-1" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="0 0 0"/>
+      </transforms>
+      <children>
+        <noderef id="pointlight-node-yafx-2"/>
+        <noderef id="pointlight-node-yafx-3"/>
+      </children>
+    </node>
+    <node id="pointlight-node-yafx-2" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-100 125 0"/>
+      </transforms>
+      <children>
+        <pointlight id="primitive-pointlight-node-yafx-2" enabled="true" castshadow="true" color="1 0.87 0.54 1" intensity="0.5" shadowmapsize="4096" distance="1000" decay="0" position="-100 125 0"/>
+      </children>
+    </node>
+    <node id="pointlight-node-yafx-3" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-150 50 0"/>
+      </transforms>
+      <children>
+        <pointlight id="primitive-pointlight-node-yafx-3" enabled="true" castshadow="false" color="1 0.87 0.54 1" intensity="0.5" shadowmapsize="4096" distance="100" decay="0" position="-150 50 0"/>
+      </children>
+    </node>
+    <node id="car" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <body id="body-yafx-0" type="kinematic" collider="ball" size="1 1 1"/>
+      <transforms>
+        <translate value3="0 0 0"/>
+      </transforms>
+      <children>
+        <noderef id="model3d-yafx-2" alias="frame"/>
+        <noderef id="model3d-yafx-5" alias="frontWheel"/>
+        <noderef id="model3d-yafx-6" alias="frontWheel"/>
+        <noderef id="model3d-yafx-3" alias="backWheel"/>
+        <noderef id="model3d-yafx-4" alias="backWheel"/>
+      </children>
+    </node>
+    <node id="model3d-yafx-2" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="0 0 0"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="/projects/racingGame/models/car_frame_green.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-5" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-2 -0.6 3.8"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="/projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-6" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="2 -0.6 3.8"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="/projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-3" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="-2 -0.6 -3"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="/projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+    <node id="model3d-yafx-4" castshadows="false" receiveshadows="true" controller="null" visible="true">
+      <transforms>
+        <translate value3="2 -0.6 -3"/>
+      </transforms>
+      <children>
+        <primitive>
+          <model3d filepath="/projects/racingGame/models/car_wheel.glb" distance="0"/>
+        </primitive>
+      </children>
+    </node>
+  </graph>
+</yaf>

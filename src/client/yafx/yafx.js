@@ -96,7 +96,7 @@ function transformsToString(object) {
 
 function getTransforms(object) {
     const transforms = [];
-    if (!positionDefault(object.position)) {
+    if (!positionDefault(object.positions)) {
         transforms.push(singleTag("translate", { value3: object.position }));
     }
     if (!scaleDefault(object.scale)) {
@@ -129,16 +129,16 @@ export class Scene {
         this.narrowDistance = 100;
         this.skybox = {
             size: [2000, 2000, 2000], center: [0, 0, 0], emissive: [0.6, 0.6, 0.6, 1], intensity: 0.4,
-            front: "projects/racingGame/textures/asgard_front.png",
-            back: "projects/racingGame/textures/asgard_back.png",
-            up: "projects/racingGame/textures/asgard_top.png",
-            down: "projects/racingGame/textures/asgard_bottom.png",
-            right: "projects/racingGame/textures/asgard_left.png",
-            left: "projects/racingGame/textures/asgard_right.png"
+            front: "/projects/racingGame/textures/asgard_front.png",
+            back: "/projects/racingGame/textures/asgard_back.png",
+            up: "/projects/racingGame/textures/asgard_top.png",
+            down: "/projects/racingGame/textures/asgard_bottom.png",
+            right: "/projects/racingGame/textures/asgard_left.png",
+            left: "/projects/racingGame/textures/asgard_right.png"
         };
 
 
-        this.rigibodies = new Map();
+        this.rigidbodies = new Map();
         this.colliders = new Map();
 
         this.textures = new Map();
@@ -187,8 +187,8 @@ export class Scene {
             }
         }
 
-        if (node.rigibody) {
-            this.rigibodies.set(node.rigibody.id, node.rigibody);
+        if (node.rigidbody) {
+            this.rigidbodies.set(node.rigidbody.id, node.rigidbody);
         }
         if (node.collider) {
             this.colliders.set(node.collider.id, node.collider);
@@ -237,7 +237,7 @@ export class Scene {
         result += this.listToString("cameras", this.cameras, { initial: this.initialCamera.id });
         result += this.listToString("textures", this.textures.values());
         result += this.listToString("materials", this.materials.values());
-        result += this.listToString("rigibodies", this.rigibodies.values());
+        result += this.listToString("rigidbodies", this.rigidbodies.values());
         result += this.listToString("colliders", this.colliders.values());
         result += this.listToString("shaders", this.shaders.values());
 
@@ -347,8 +347,9 @@ export class Collider extends InstanceCounter {
         this.positions = [];
         this.rotations = [];
         this.scales = [];
-
-
+        this.position = new Vec3(0, 0, 0);  
+        this.scale = new Vec3(1, 1, 1);
+        this.rotation = new Vec3(0, 0, 0);
     }
 
     defaultId(id) {
@@ -372,6 +373,9 @@ export class RigidBody extends InstanceCounter {
         this.positions = [];
         this.rotations = [];
         this.scales = [];
+        this.position = new Vec3(0, 0, 0);
+        this.scale = new Vec3(1, 1, 1);
+        this.rotation = new Vec3(0, 0, 0);
     }
 
     defaultId(id) {
@@ -392,7 +396,7 @@ export class Node extends InstanceCounter {
     constructor(id = null) {
         super(id);
         this.children = [];
-        this.rigibody = null;
+        this.rigidbody = null;
         this.collider = null;
         this.positions = [];
         this.rotations = [];

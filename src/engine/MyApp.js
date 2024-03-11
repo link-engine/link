@@ -22,8 +22,6 @@ class MyApp {
 
         this.scenes       = new Map();
         this.currentScene = 'race';
-        this.app          = app;
-
         this.scenes.set("test", testScene);
         
         this.project = null
@@ -106,9 +104,9 @@ class MyApp {
         // complete here 
     }
 
-    async changeScene(sceneName, context = null) {
+    async loadScene(sceneName, context = null) {
 
-        debugger
+        
         const yafxScenes = "../../projects/";
         const project    = "racingGame";
         const yafxOutput = yafxScenes + `${project}/scenes/${sceneName}.xml`;
@@ -121,7 +119,6 @@ class MyApp {
         });
 
         
-        this.app.resetScene();
         let reader = new MyFileReader();
         let xmlData;
         
@@ -137,12 +134,11 @@ class MyApp {
         this.contents.reset();
         await reader.readXML();
         await this.contents.onSceneLoaded(reader.data)
-        this.contents.loadModels();
+        await this.contents.loadModels();
         
         this.startScene()
-        this.init()
 
-        return contents;
+        return this.contents;
 
     }
 
@@ -160,7 +156,7 @@ class MyApp {
         const perspective1 = new THREE.PerspectiveCamera(75, aspect, 0.1, 1500)
         //perspective1.position.set(10, 10, 3)
 
-
+        
         for (var key in cameras) {
             let camera = cameras[key]
             let newCamera = null;
@@ -174,6 +170,7 @@ class MyApp {
             newCamera.lookAt(new THREE.Vector3(camera.target[0], camera.target[1], camera.target[2]))
             this.contents.scene.add(newCamera)
         }
+
 
         this.setActiveCamera(activeCameraId)
         perspective1.position.set(-200, 0, 15);
@@ -372,7 +369,7 @@ class MyApp {
         for (let [key, value] of this.objects.entries()) {
             if (value === object) {
                 this.objects.delete(key);
-                this.controllers.delete(value);
+                this.contents.controllers.delete(value);
                 break;
             }
         }
@@ -427,12 +424,16 @@ class MyApp {
         this.setActiveCamera(camera);
     }
 
-    changeScene(scene) {
+    async changeScene(scene) {
 
+        if (this.rootId) {
+            let root = this.objects.get(this.rootId);
+            let rootController = this.contents.controllers.get(root);
+            await this.loadScene(scene, rootController.exports);
 
-        let root = this.objects.get(this.rootId);
-        let rootController = this.controllers.get(root);
-        this.changeScene(scene, rootController.exports);
+        }
+
+        await this.loadScene(scene, null);
         this.loading = true;
 
     }
@@ -480,9 +481,6 @@ class MyApp {
 
     startObjects() {
 
-        if (!this.contents.modelsLoaded)
-            return;
-
         let params = this.getParams();
 
         for (const [object, controller] of this.contents.controllers.entries()) {
@@ -497,7 +495,7 @@ class MyApp {
     }
     startScene() {
 
-        this.createScene();
+        this.contents.createScene();
         this.startObjects();
         this.setCameras(this.contents.cameras, this.contents.activeCameraId)
 
@@ -548,7 +546,7 @@ class MyApp {
 
         let params = this.getParams()
 
-        for (const [object, controller] of this.controllers.entries()) {
+        for (const [object, controller] of this.contents.controllers.entries()) {
 
             params.object = object;
             params.mixer = this.mixers.get(object.id);
@@ -562,7 +560,7 @@ class MyApp {
         const aliveParticles = [];
         for (const particle of this.particles) {
             if (!particle.isDone()) {
-                particle.update(this.app.clock);
+                particle.update(this.clock);
                 aliveParticles.push(particle);
             }
             else {
@@ -616,7 +614,7 @@ class MyApp {
 
         // update the animation if contents were provided
         if (this.activeCamera !== undefined && this.activeCamera !== null) {
-            this.contents.update()
+            this.update()
         }
 
         // required if controls.enableDamping or controls.autoRotate are set to true

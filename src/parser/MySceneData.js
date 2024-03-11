@@ -89,6 +89,18 @@ class MySceneData {
             { name: "value", type: "string" },
         ]
 
+        this.descriptors["rigidbody"] = [
+            { name: "id", type: "string" },
+            { name: "type", type: "string" },
+
+        ]
+
+        this.descriptors["collider"] = [
+            { name: "id", type: "string" },
+            { name: "type", type: "string" },
+
+        ]
+
         this.descriptors["material"] = [
             { name: "id", type: "string" },
             { name: "color", type: "rgba" },
@@ -288,7 +300,7 @@ class MySceneData {
             { name: "shadowmapsize", type: "integer", required: false, default: 512 },
         ]
 
-        this.primaryNodeIds = ["globals", "fog", "envs", "skybox", "huds", "joints", "textures", "materials", "shaders", "cameras", "graph"]
+        this.primaryNodeIds = ["globals", "fog", "envs", "skybox", "huds", "joints", "textures", "rigidbodies", "colliders", "materials", "shaders", "cameras", "graph"]
 
         this.primitiveIds = ["cylinder", "rectangle", "triangle", "sphere", "nurbs", "box", "model3d", "skybox", "lod", "polygon", "text", "particle"]
     }
