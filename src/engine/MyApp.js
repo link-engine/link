@@ -24,6 +24,7 @@ class MyApp {
         this.currentScene = 'race';
         this.scenes.set("test", testScene);
         
+        this.bodies = new Map();
         this.project = null
         this.clock     = new THREE.Clock();
         this.raycaster = new THREE.Raycaster()
@@ -497,9 +498,21 @@ class MyApp {
 
         this.contents.createScene();
         this.startObjects();
+        this.setPhysicsObjects()
         this.setCameras(this.contents.cameras, this.contents.activeCameraId)
 
     }
+
+    setPhysicsObjects() {
+
+        if (this.usePhysics) {
+            for (const [object, rigidbody] of this.contents.objectRigid.entries()) {
+                let r = this.physics.createRigidBody(new RAPIER.RigidBodyDesc(RAPIER.RigidBodyType.Dynamic));
+                this.bodies.push({rigid: r, mesh: object});
+            }
+        }
+    }
+
 
 
     triggerEvents() {
@@ -545,6 +558,19 @@ class MyApp {
     updateObjects() {
 
         let params = this.getParams()
+
+        // Iterating over this.bodies
+
+        for (const body of this.bodies) {
+            
+            let position = body.rigid.translation();
+            let rotation = body.rigid.rotation();
+
+            body.mesh.position.set(position.x, position.y, position.z);
+            body.mesh.setRotationFromQuaternion(new THREE.Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+            
+        }
+
 
         for (const [object, controller] of this.contents.controllers.entries()) {
 

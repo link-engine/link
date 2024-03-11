@@ -39,6 +39,10 @@ class MyContents {
         this.models = new Map();
         this.rigidbodies = new Map();
         this.colliders = new Map();
+
+        this.objectRigid = new Map();
+        this.objectCollider = new Map();
+
         this.particles = [];
 
         this.fonts = new Map();
@@ -688,17 +692,15 @@ class MyContents {
 
         for (const [rigidbody, rigidbodyElement] of data.rigidbodies.entries()) {
 
-            // continue here with RAPIER logic
-            let r;
-            this.rigidbodies.set(rigidbody, r);
+            this.rigidbodies.set(rigidbody, rigidbodyElement);
 
         }
 
 
         for (const [collider, colliderElement] of data.colliders.entries()) {
             // continue here with RAPIER logic
-            let c;
-            this.colliders.set(collider, c);
+            this.colliders.set(collider, colliderElement);
+
         }
 
         console.log("cameras:")
@@ -1133,9 +1135,16 @@ class MyContents {
         if (node.visible == false) {
             object.visible = false;
         }
-        if (node.body !== null) {
 
-            this.loadBody(node.body, object);
+        if (node.rigidbody !== null) {
+
+            let r = this.rigidbodies.get(node.rigidbody);
+            this.objectRigid.set(object, r);
+        }
+
+        if (node.collider !== null) {
+            let c = this.colliders.get(node.collider);
+            this.objectCollider.set(object, c);
         }
 
         this.layers.set(object.id, node.layers);
@@ -1187,23 +1196,7 @@ class MyContents {
         return object;
     }
 
-    loadBody(body, object) {
 
-
-        let ballDesc = this.rapier.ColliderDesc.ball(0.5);
-
-        let rigidBodyDesc = this.rapier.RigidBodyDesc.dynamic()
-            // The rigid body translation.
-            // Default: zero vector.
-            .setTranslation(0.0, 5.0, 1.0)
-            // The rigid body rotation as a quaternion.
-            // Default: no rotation.
-            .setRotation({ w: 1.0, x: 0.0, y: 0.0, z: 0.0 });
-
-        let rigidBody = this.physics.createRigidBody(rigidBodyDesc);
-        let collider = this.physics.createCollider(ballDesc, rigidBody);
-        object.collider = collider;
-    }
     shareLayer(object, otherObject) {
 
         let objectLayers = this.layers.get(object.id);

@@ -187,8 +187,10 @@ export function generateCar(id, color) {
 
 
     let r = new yafx.RigidBody();
+    let c = new yafx.Collider();
 
     let car = new yafx.Node(id);
+    car.collider = c;
     car.rigidbody = r; 
     let frame = new yafx.Model3D(`/projects/racingGame/models/car_frame_${color}.glb`, 0)
     let backLeftWheel = new yafx.Model3D("/projects/racingGame/models/car_wheel.glb", 0)

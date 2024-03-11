@@ -661,7 +661,7 @@ class MyFileReader  {
 		for (let i=0; i < rigidbodyElements.length; i++) {
 			let rigidbodyElement = rigidbodyElements[i];
 			let id = this.getString(rigidbodyElement, "id");
-			let rigidbody = this.data.createEmptyRigidbody(id)
+			let rigidbody = this.data.createEmptyRigidBody(id)
 
 			let transforms =  rigidbodyElement.getElementsByTagName('transforms')
 			if (transforms !== null && transforms.length > 0) {

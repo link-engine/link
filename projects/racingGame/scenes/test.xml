@@ -18,7 +18,13 @@
       </transforms>
     </rigidbody>
   </rigidbodies>
-  <colliders/>
+  <colliders>
+    <collider id="collider-yafx-0" type="box">
+      <transforms>
+        <translate value3="0 0 0"/>
+      </transforms>
+    </collider>
+  </colliders>
   <shaders/>
   <graph rootid="node-yafx-0" narrowDistance="100">
     <node id="node-yafx-0" castshadows="false" receiveshadows="true" controller="null" visible="true">
