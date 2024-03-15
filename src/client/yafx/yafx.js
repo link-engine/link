@@ -59,6 +59,7 @@ function attributesToString(attributes) {
 
 
 function complexTag(name, attributes, childName, children) {
+
     let result = "<" + name + " ";
     result += attributesToString(attributes);
     result += ">";
@@ -79,8 +80,47 @@ function singleTag(name, attributes) {
 }
 
 
+function transformsToString(object) {
+    // gather transforms
+    const transformations = getTransforms(object);
+    if (transformations.length == 0) {
+        return "";
+    }
+    let result = "<transforms>"
+    for (const transformation of transformations) {
+        result += transformation;
+    }
+    result += "</transforms>";
+    return result;
+}
+
+function getTransforms(object) {
+    const transforms = [];
+    if (!positionDefault(object.positions)) {
+        transforms.push(singleTag("translate", { value3: object.position }));
+    }
+    if (!scaleDefault(object.scale)) {
+        transforms.push(singleTag("scale", { value3: object.scale }));
+    }
+    if (!rotateDefault(object.rotation)) {
+        const degToRad = deg => Math.PI * deg / 180;
+        const rotationInRads = [
+            degToRad(object.rotation.x),
+            degToRad(object.rotation.y),
+            degToRad(object.rotation.z),
+        ];
+
+        transforms.push(singleTag("rotate", { value3: rotationInRads }));
+    }
+
+    return transforms;
+
+}
+
+
 export class Scene {
     constructor() {
+        this.joints = [];
         this.globals = { background: [0, 0, 0, 1], ambient: [0, 0, 0, 1] };
         this.envs = [];
         this.fog = { color: [0.1, 0.13, 0.1, 1], near: 100, far: 300 };
@@ -89,14 +129,17 @@ export class Scene {
         this.narrowDistance = 100;
         this.skybox = {
             size: [2000, 2000, 2000], center: [0, 0, 0], emissive: [0.6, 0.6, 0.6, 1], intensity: 0.4,
-            front: "projects/racingGame/textures/asgard_front.png",
-            back: "projects/racingGame/textures/asgard_back.png",
-            up: "projects/racingGame/textures/asgard_top.png",
-            down: "projects/racingGame/textures/asgard_bottom.png",
-            right: "projects/racingGame/textures/asgard_left.png",
-            left: "projects/racingGame/textures/asgard_right.png"
+            front: "/projects/racingGame/textures/asgard_front.png",
+            back: "/projects/racingGame/textures/asgard_back.png",
+            up: "/projects/racingGame/textures/asgard_top.png",
+            down: "/projects/racingGame/textures/asgard_bottom.png",
+            right: "/projects/racingGame/textures/asgard_left.png",
+            left: "/projects/racingGame/textures/asgard_right.png"
         };
 
+
+        this.rigidbodies = new Map();
+        this.colliders = new Map();
 
         this.textures = new Map();
         this.materials = new Map();
@@ -143,6 +186,13 @@ export class Scene {
 
             }
         }
+
+        if (node.rigidbody) {
+            this.rigidbodies.set(node.rigidbody.id, node.rigidbody);
+        }
+        if (node.collider) {
+            this.colliders.set(node.collider.id, node.collider);
+        }
     }
     flattenChildren(children) {
         for (const child of children) {
@@ -183,10 +233,12 @@ export class Scene {
 
         result += singleTag("fog", this.fog);
         result += this.listToString("huds", this.huds);
-
+        result += this.listToString("joints", this.joints);
         result += this.listToString("cameras", this.cameras, { initial: this.initialCamera.id });
         result += this.listToString("textures", this.textures.values());
         result += this.listToString("materials", this.materials.values());
+        result += this.listToString("rigidbodies", this.rigidbodies.values());
+        result += this.listToString("colliders", this.colliders.values());
         result += this.listToString("shaders", this.shaders.values());
 
         result += `<graph rootid="${this.root.id}" narrowDistance="${this.narrowDistance}">`;
@@ -254,10 +306,98 @@ function scaleDefault(v) {
     return areEqual(v, 1, 1, 1);
 }
 
+export class Joint extends InstanceCounter {
+    constructor(id = null) {
+        super(id);
+        this.firstRigidbody = null
+        this.secondRigidbody = null
+        this.anchors = [];
+        this.motor = null;
+    }
+    defaultId(id) {
+        return "joint-yafx-" + id;
+    }
+
+    anchorsToString() {
+        if (this.anchors.length == 0) {
+            return "";
+        }
+        let result = "<anchors>"
+        for (const anchor of this.anchors) {
+            result += singleTag("anchor", anchor);
+        }
+        result += "</anchors>";
+        return result;
+    }
+
+    toString() {
+        
+        let u = `<joint id="${this.id}" motor="${this.controller}" rigidbody1="${this.firstRigidbody}" rigidbody2="${this.secondRigidbody}">
+       ${this.anchorsToString()}
+       </joint>
+       `
+        return u
+    }
+}
+
+export class Collider extends InstanceCounter {
+    constructor(id = null) {
+        super(id);
+        this.type = "box";
+        this.positions = [];
+        this.rotations = [];
+        this.scales = [];
+        this.position = new Vec3(0, 0, 0);  
+        this.scale = new Vec3(1, 1, 1);
+        this.rotation = new Vec3(0, 0, 0);
+    }
+
+    defaultId(id) {
+        return "collider-yafx-" + id;
+    }
+
+    toString() {
+        let u = `<collider id="${this.id}" type="${this.type}">
+         ${transformsToString(this)}
+         </collider>
+            `
+        return u;
+    }
+
+}
+
+export class RigidBody extends InstanceCounter {
+    constructor(id = null) {
+        super(id);
+        this.type = "kinematic";
+        this.positions = [];
+        this.rotations = [];
+        this.scales = [];
+        this.position = new Vec3(0, 0, 0);
+        this.scale = new Vec3(1, 1, 1);
+        this.rotation = new Vec3(0, 0, 0);
+    }
+
+    defaultId(id) {
+        return "rigidbody-yafx-" + id;
+    }
+
+    toString() {
+        let u = `<rigidbody id="${this.id}" type="${this.type}">
+         ${transformsToString(this)}
+         </rigidbody>
+            `
+        return u;
+    }
+}
+
+
 export class Node extends InstanceCounter {
     constructor(id = null) {
         super(id);
         this.children = [];
+        this.rigidbody = null;
+        this.collider = null;
         this.positions = [];
         this.rotations = [];
         this.scales = [];
@@ -280,46 +420,12 @@ export class Node extends InstanceCounter {
         let u = `<node id="${this.id}" castshadows="${this.castshadows}" receiveshadows="${this.receiveshadows}" controller="${this.controller}" visible="${this.visible}">
        ${this.material ? this.material.getRef() : ""}
        ${this.body ? this.body.toString() : ""}
-       ${this.transformsToString()}
+       ${transformsToString(this)}
        ${this.childrenToString()}
        ${this.layersToString()}
        </node>
        `
         return u;
-    }
-    transformsToString() {
-        // gather transforms
-        const transformations = this.getTransforms();
-        if (transformations.length == 0) {
-            return "";
-        }
-        let result = "<transforms>"
-        for (const transformation of transformations) {
-            result += transformation;
-        }
-        result += "</transforms>";
-        return result;
-    }
-    getTransforms() {
-        const transforms = [];
-        if (!positionDefault(this.position)) {
-            transforms.push(singleTag("translate", { value3: this.position }));
-        }
-        if (!scaleDefault(this.scale)) {
-            transforms.push(singleTag("scale", { value3: this.scale }));
-        }
-        if (!rotateDefault(this.rotation)) {
-            const degToRad = deg => Math.PI * deg / 180;
-            const rotationInRads = [
-                degToRad(this.rotation.x),
-                degToRad(this.rotation.y),
-                degToRad(this.rotation.z),
-            ];
-
-            transforms.push(singleTag("rotate", { value3: rotationInRads }));
-        }
-        return transforms;
-
     }
 
     layersToString() {

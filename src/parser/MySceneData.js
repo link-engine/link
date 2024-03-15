@@ -23,8 +23,12 @@ class MySceneData {
         this.lights = [];
         this.textures = [];
 
+
+        this.rigidbodies = new Map();
+        this.colliders = new Map();
         this.envs = new Map()
         this.huds = new Map();
+        this.joints = new Map();
         this.cameras = [];
         this.activeCameraId = null;
         this.alias = new Map();
@@ -83,6 +87,18 @@ class MySceneData {
             { name: "name", type: "string" },
             { name: "type", type: "string" },
             { name: "value", type: "string" },
+        ]
+
+        this.descriptors["rigidbody"] = [
+            { name: "id", type: "string" },
+            { name: "type", type: "string" },
+
+        ]
+
+        this.descriptors["collider"] = [
+            { name: "id", type: "string" },
+            { name: "type", type: "string" },
+
         ]
 
         this.descriptors["material"] = [
@@ -284,7 +300,7 @@ class MySceneData {
             { name: "shadowmapsize", type: "integer", required: false, default: 512 },
         ]
 
-        this.primaryNodeIds = ["globals", "fog", "envs", "skybox", "huds", "textures", "materials", "shaders", "cameras", "graph"]
+        this.primaryNodeIds = ["globals", "fog", "envs", "skybox", "huds", "joints", "textures", "rigidbodies", "colliders", "materials", "shaders", "cameras", "graph"]
 
         this.primitiveIds = ["cylinder", "rectangle", "triangle", "sphere", "nurbs", "box", "model3d", "skybox", "lod", "polygon", "text", "particle"]
     }
@@ -437,11 +453,30 @@ class MySceneData {
         console.debug("added light " + JSON.stringify(light));
     }
 
+    getJoint(id) {
+        let value = this.joints.get(id)
+        if (value === undefined) return null
+        return value
+    }
+
     getHUD(id) {
         let value = this.huds.get(id);
         if (value === undefined) return null
         return value
     }
+
+    getRigidBody(id) {
+        let value = this.rigidbodies.get(id);
+        if (value === undefined) return null
+        return value
+    }
+
+    getCollider(id) {
+        let value = this.colliders.get(id);
+        if (value === undefined) return null
+        return value
+    }
+
 
     getNode(id) {
         let value = this.nodes[id];
@@ -460,6 +495,27 @@ class MySceneData {
 
     }
 
+    createEmptyRigidBody(id) {
+        let obj = this.getRigidBody(id)
+        if (obj !== null && obj !== undefined) {
+            throw new Error("inconsistency: a rigid body with id " + id + " already exists!");
+        }
+        obj = { id: id, transformations: [], type: null };
+        this.rigidbodies.set(id, obj);
+        return obj;
+    }
+
+    createEmptyCollider(id) {
+
+        let obj = this.getCollider(id)
+        if (obj !== null && obj !== undefined) {
+            throw new Error("inconsistency: a collider with id " + id + " already exists!");
+        }
+        obj = { id: id, transformations: [], type: null };
+        this.colliders.set(id, obj);
+        return obj;
+    }
+
     createEmptyNode(id) {
         let obj = this.getNode(id)
         if (obj !== null && obj !== undefined) {
@@ -473,6 +529,16 @@ class MySceneData {
 
     addAlias(id, alias) {
         this.alias.set(id, alias)
+    }
+
+    addJoint(joint) {
+        let obj = this.getJoint(joint.id)
+        if (obj !== null && obj !== undefined) {
+            throw new Error("inconsistency: a joint with id " + joint.id + " already exists!");
+        }
+        this.joints.set(joint.id, joint);
+        this.createCustomAttributeIfNotExists(joint)
+        console.debug("added joint " + JSON.stringify(joint));
     }
 
     addHUD(hud) {

@@ -1,4 +1,4 @@
-import * as yafx from "../../../yafx/yafx.js";
+import * as yafx from "../../../src/client/yafx/yafx.js";
 import { Vector3 } from "three";
 
 
@@ -186,12 +186,17 @@ export function generateParkingLot() {
 export function generateCar(id, color) {
 
 
+    let r = new yafx.RigidBody();
+    let c = new yafx.Collider();
+
     let car = new yafx.Node(id);
-    let frame = new yafx.Model3D(`../projects/racingGame/models/car_frame_${color}.glb`, 0)
-    let backLeftWheel = new yafx.Model3D("../projects/racingGame/models/car_wheel.glb", 0)
-    let backRightWheel = new yafx.Model3D("../projects/racingGame/models/car_wheel.glb", 0)
-    let frontLeftWheel = new yafx.Model3D("../projects/racingGame/models/car_wheel.glb", 0)
-    let frontRightWheel = new yafx.Model3D("../projects/racingGame/models/car_wheel.glb", 0)
+    car.collider = c;
+    car.rigidbody = r; 
+    let frame = new yafx.Model3D(`/projects/racingGame/models/car_frame_${color}.glb`, 0)
+    let backLeftWheel = new yafx.Model3D("/projects/racingGame/models/car_wheel.glb", 0)
+    let backRightWheel = new yafx.Model3D("/projects/racingGame/models/car_wheel.glb", 0)
+    let frontLeftWheel = new yafx.Model3D("/projects/racingGame/models/car_wheel.glb", 0)
+    let frontRightWheel = new yafx.Model3D("/projects/racingGame/models/car_wheel.glb", 0)
 
     frame.alias = "frame"
     frontLeftWheel.alias = "frontWheel"

@@ -20,6 +20,7 @@ class MyContents {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x101010);
 
+        this.activeCameraId = null;
         this.modelsLoaded = false;
         this.modelsStarted = false;
         this.axis = null
@@ -36,10 +37,16 @@ class MyContents {
         this.lights = new Map();
         this.mixers = new Map();
         this.models = new Map();
+        this.rigidbodies = new Map();
+        this.colliders = new Map();
+
+        this.objectRigid = new Map();
+        this.objectCollider = new Map();
+
         this.particles = [];
 
         this.fonts = new Map();
-        this.fonts.set("default", new MyTextRenderer("fonts/default.png", 70, 10, 10, 32));
+        this.fonts.set("default", new MyTextRenderer("../fonts/default.png", 70, 10, 10, 32));
 
         this.loader = new GLTFLoader();
 
@@ -285,7 +292,6 @@ class MyContents {
         this.modelsStarted = false;
         this.paused = false
         this.loading = false
-        this.eventMap.clear();
         this.alias.clear();
         this.layers.clear();
         this.objects.clear();
@@ -398,34 +404,13 @@ class MyContents {
 
     addCamera(camera, cameraName) {
 
-        this.cameras.set(cameraName, camera);
+        this.cameras[cameraName] = camera;
     }
 
     getObject(id) {
         return this.objects.get(id);
     }
 
-    pushEvent(event) {
-        this.eventQueue.push(event);
-    }
-
-    registerListener(event, listener) {
-
-        if (!this.eventMap.has(event)) {
-            this.eventMap.set(event, []);
-        }
-        this.eventMap.get(event).push(listener);
-    }
-
-    removeListener(event, listener) {
-        if (this.eventMap.has(event)) {
-            const listeners = this.eventMap.get(event);
-            const index = listeners.indexOf(listener);
-            if (index > -1) {
-                listeners.splice(index, 1);
-            }
-        }
-    }
 
     createScene() {
 
@@ -705,8 +690,21 @@ class MyContents {
             this.huds.set(hud, hudObject);
         }
 
-        console.log("cameras:")
+        for (const [rigidbody, rigidbodyElement] of data.rigidbodies.entries()) {
 
+            this.rigidbodies.set(rigidbody, rigidbodyElement);
+
+        }
+
+
+        for (const [collider, colliderElement] of data.colliders.entries()) {
+            // continue here with RAPIER logic
+            this.colliders.set(collider, colliderElement);
+
+        }
+
+        console.log("cameras:")
+        this.activeCameraId = data.activeCameraId;
         for (var key in data.cameras) {
             let camera = data.cameras[key]
             this.addCamera(camera, key)
@@ -1137,9 +1135,16 @@ class MyContents {
         if (node.visible == false) {
             object.visible = false;
         }
-        if (node.body !== null) {
 
-            this.loadBody(node.body, object);
+        if (node.rigidbody !== null) {
+
+            let r = this.rigidbodies.get(node.rigidbody);
+            this.objectRigid.set(object, r);
+        }
+
+        if (node.collider !== null) {
+            let c = this.colliders.get(node.collider);
+            this.objectCollider.set(object, c);
         }
 
         this.layers.set(object.id, node.layers);
@@ -1183,7 +1188,7 @@ class MyContents {
             object = this.visitLightNode(node)
         }
         else {
-            debugger
+            
             console.error("Bad Node Type Or node without children");
             console.log(node);
         }
@@ -1191,23 +1196,7 @@ class MyContents {
         return object;
     }
 
-    loadBody(body, object) {
 
-
-        let ballDesc = this.rapier.ColliderDesc.ball(0.5);
-
-        let rigidBodyDesc = this.rapier.RigidBodyDesc.dynamic()
-            // The rigid body translation.
-            // Default: zero vector.
-            .setTranslation(0.0, 5.0, 1.0)
-            // The rigid body rotation as a quaternion.
-            // Default: no rotation.
-            .setRotation({ w: 1.0, x: 0.0, y: 0.0, z: 0.0 });
-
-        let rigidBody = this.physics.createRigidBody(rigidBodyDesc);
-        let collider = this.physics.createCollider(ballDesc, rigidBody);
-        object.collider = collider;
-    }
     shareLayer(object, otherObject) {
 
         let objectLayers = this.layers.get(object.id);

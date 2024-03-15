@@ -4,13 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { MyContents } from './MyContents.js';
 import { MyGuiInterface } from './MyGuiInterface.js';
 import Stats from 'three/addons/libs/stats.module.js'
-import { SceneManager } from './projects/racingGame/sceneManager.js';
-import { MyFileReader } from '../../parser/MyFileReader.js';
+import { MyFileReader } from '../parser/MyFileReader.js';
 
-import * as raceScene from './scenes/race.js';
-import * as menuScene from './scenes/menu.js';
-import * as testScene from './scenes/test.js';
-import * as resultsScene from './scenes/results.js';
+import * as testScene from '../../projects/racingGame/scenes/test.js';
 
 
 
@@ -26,12 +22,9 @@ class MyApp {
 
         this.scenes       = new Map();
         this.currentScene = 'race';
-        this.app          = app;
-        this.scenes.set("race", raceScene);
-        this.scenes.set("menu", menuScene);
         this.scenes.set("test", testScene);
-        this.scenes.set("results", resultsScene);
         
+        this.bodies = new Map();
         this.project = null
         this.clock     = new THREE.Clock();
         this.raycaster = new THREE.Raycaster()
@@ -112,10 +105,10 @@ class MyApp {
         // complete here 
     }
 
-    async changeScene(sceneName, context) {
+    async loadScene(sceneName, context = null) {
 
-
-        const yafxScenes = "./projects/";
+        
+        const yafxScenes = "../../projects/";
         const project    = "racingGame";
         const yafxOutput = yafxScenes + `${project}/scenes/${sceneName}.xml`;
         
@@ -127,7 +120,6 @@ class MyApp {
         });
 
         
-        this.app.resetScene();
         let reader = new MyFileReader();
         let xmlData;
         
@@ -143,12 +135,11 @@ class MyApp {
         this.contents.reset();
         await reader.readXML();
         await this.contents.onSceneLoaded(reader.data)
-        this.contents.loadModels();
-
+        await this.contents.loadModels();
+        
         this.startScene()
-        this.init()
 
-        return contents;
+        return this.contents;
 
     }
 
@@ -166,7 +157,7 @@ class MyApp {
         const perspective1 = new THREE.PerspectiveCamera(75, aspect, 0.1, 1500)
         //perspective1.position.set(10, 10, 3)
 
-
+        
         for (var key in cameras) {
             let camera = cameras[key]
             let newCamera = null;
@@ -180,6 +171,7 @@ class MyApp {
             newCamera.lookAt(new THREE.Vector3(camera.target[0], camera.target[1], camera.target[2]))
             this.contents.scene.add(newCamera)
         }
+
 
         this.setActiveCamera(activeCameraId)
         perspective1.position.set(-200, 0, 15);
@@ -378,7 +370,7 @@ class MyApp {
         for (let [key, value] of this.objects.entries()) {
             if (value === object) {
                 this.objects.delete(key);
-                this.controllers.delete(value);
+                this.contents.controllers.delete(value);
                 break;
             }
         }
@@ -433,12 +425,16 @@ class MyApp {
         this.setActiveCamera(camera);
     }
 
-    changeScene(scene) {
+    async changeScene(scene) {
 
+        if (this.rootId) {
+            let root = this.objects.get(this.rootId);
+            let rootController = this.contents.controllers.get(root);
+            await this.loadScene(scene, rootController.exports);
 
-        let root = this.objects.get(this.rootId);
-        let rootController = this.controllers.get(root);
-        this.changeScene(scene, rootController.exports);
+        }
+
+        await this.loadScene(scene, null);
         this.loading = true;
 
     }
@@ -486,9 +482,6 @@ class MyApp {
 
     startObjects() {
 
-        if (!this.contents.modelsLoaded)
-            return;
-
         let params = this.getParams();
 
         for (const [object, controller] of this.contents.controllers.entries()) {
@@ -503,11 +496,23 @@ class MyApp {
     }
     startScene() {
 
-        this.createScene();
+        this.contents.createScene();
         this.startObjects();
+        this.setPhysicsObjects()
         this.setCameras(this.contents.cameras, this.contents.activeCameraId)
 
     }
+
+    setPhysicsObjects() {
+
+        if (this.usePhysics) {
+            for (const [object, rigidbody] of this.contents.objectRigid.entries()) {
+                let r = this.physics.createRigidBody(new RAPIER.RigidBodyDesc(RAPIER.RigidBodyType.Dynamic));
+                this.bodies.push({rigid: r, mesh: object});
+            }
+        }
+    }
+
 
 
     triggerEvents() {
@@ -554,7 +559,20 @@ class MyApp {
 
         let params = this.getParams()
 
-        for (const [object, controller] of this.controllers.entries()) {
+        // Iterating over this.bodies
+
+        for (const body of this.bodies) {
+            
+            let position = body.rigid.translation();
+            let rotation = body.rigid.rotation();
+
+            body.mesh.position.set(position.x, position.y, position.z);
+            body.mesh.setRotationFromQuaternion(new THREE.Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+            
+        }
+
+
+        for (const [object, controller] of this.contents.controllers.entries()) {
 
             params.object = object;
             params.mixer = this.mixers.get(object.id);
@@ -568,7 +586,7 @@ class MyApp {
         const aliveParticles = [];
         for (const particle of this.particles) {
             if (!particle.isDone()) {
-                particle.update(this.app.clock);
+                particle.update(this.clock);
                 aliveParticles.push(particle);
             }
             else {
@@ -622,7 +640,7 @@ class MyApp {
 
         // update the animation if contents were provided
         if (this.activeCamera !== undefined && this.activeCamera !== null) {
-            this.contents.update()
+            this.update()
         }
 
         // required if controls.enableDamping or controls.autoRotate are set to true
